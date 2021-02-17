@@ -1,0 +1,146 @@
+ol {
+    display: block;
+    list-style-type: decimal;
+    margin-block-start: 1em;
+    margin-block-end: 1em;
+    margin-inline-start: 0px;
+    margin-inline-end: 0px;
+    padding-inline-start: 40px;
+}
+
+a {
+    color: white;
+}
+
+.alert-state-ok {
+    color: green;
+    fill: green;
+}
+
+.alert-state-warning {
+    color: orange;
+    fill: orange;
+}
+
+.alert-state-alerting {
+    color: red;
+    fill: red;
+}
+
+.panel-alert-icon {
+    display: none;
+}
+
+.panel-has-alert {
+    .panel-alert-icon {
+        display: inline-block;
+    }
+}
+
+.alert-rule-list {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    list-style-type: none;
+    color: white;
+    overflow: auto;
+    height: 100%;
+}
+
+.alert-rule-item {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+    background: #2B2B2B;
+    box-shadow: none;
+    padding: 4px 8px;
+    border-radius: 4px;
+    margin-bottom: 4px;
+    background-attachment: scroll;
+    overflow: hidden;
+    height: 50px;
+    text-overflow: elipsis;
+}
+
+.alert-rule-item__body {
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+    justify-content: center;
+    overflow: hidden;
+    padding: 2px;
+}
+
+.alert-rule-item__icon {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 40px;
+    //margin-right: 8px;
+    padding: 0 4px 0 2px;
+    .icon-gf,
+    .fa {
+        font-size: 200%;
+        position: relative;
+        top: 2px;
+    }
+}
+
+.alert-rule-item__header {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    white-space: nowrap;
+}
+
+.alert-rule-item__name {
+    font-size: 14;
+    margin: 0;
+    font-weight: 500;
+}
+
+.alert-rule-item__text {
+    font-weight: bold;
+    font-size: 12;
+    margin: 0;
+}
+
+.alert-rule-item__time {
+    color: #7b8087;
+    font-weight: normal;
+    white-space: nowrap;
+    padding: 3px;
+}
+
+.alert-rule-item__info {
+    font-weight: normal;
+    flex-grow: 2;
+    display: flex;
+    align-items: flex-end;
+}
+
+.alert-rule-item__actions {
+    display: flex;
+    align-items: center;
+}
+
+.label-tag {
+    margin-right: 4px;
+    margin-top: 8px;
+    white-space: nowrap;
+    border-radius: 3px;
+    text-shadow: none;
+    font-size: 12px;
+    padding: 0 6px;
+    line-height: 20px;
+    height: 20px;
+}
+
+.label{
+    display: inline-block;
+    font-weight: 500;
+    color: #fff;
+    vertical-align: baseline;
+}

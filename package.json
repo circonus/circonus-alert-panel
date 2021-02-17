@@ -1,0 +1,25 @@
+{
+  "name": "mlb-circonus-alert-panel",
+  "version": "1.0.0",
+  "description": "A Panel to display circonus alerts in the style of default grafana alerts.  Requires circonus-irondb-datasource plugin to function.",
+  "scripts": {
+    "build": "grafana-toolkit plugin:build",
+    "test": "grafana-toolkit plugin:test",
+    "dev": "grafana-toolkit plugin:dev",
+    "watch": "grafana-toolkit plugin:dev --watch",
+    "sign": "grafana-toolkit plugin:sign"
+  },
+  "author": "Riley Berton",
+  "license": "Apache-2.0",
+  "devDependencies": {
+    "@grafana/data": "latest",
+    "@grafana/toolkit": "latest",
+    "@grafana/ui": "latest",
+    "emotion": "10.0.27",
+    "@types/mustache": "latest",
+    "mustache": "latest"
+  },
+  "engines": {
+    "node": ">=14"
+  }
+}
