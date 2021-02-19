@@ -182,7 +182,7 @@ export const CirconusAlertPanel: React.FC<Props> = ({ options, data, width, heig
         //const iconName = iconState === 'alerting' ? 'heart-break' : 'heart';
 
         let alertName = '';
-        if (notes !== '') {
+        if (notes && notes !== '') {
           // attempt to parse row.notes in case it might be json
           try {
             const parsed = JSON.parse(notes);
@@ -198,7 +198,10 @@ export const CirconusAlertPanel: React.FC<Props> = ({ options, data, width, heig
           alertName = metric_name;
         }
 
-        const alert_view_tags = tags.split('|');
+        let alert_view_tags = [];
+        if (tags && tags.length > 0) {
+          alert_view_tags = tags.split('|');
+        }
 
         let humanReadableTime = 'for ';
         const now = new Date().valueOf();
@@ -228,9 +231,14 @@ export const CirconusAlertPanel: React.FC<Props> = ({ options, data, width, heig
           );
         }
 
-        alertName = Mustache.render(alertName, tagDict);
+        if (alertName) {
+          alertName = Mustache.render(alertName, tagDict);
+        }
 
-        const alertDrillDownLink = Mustache.render(options.link, { alert_id: alert_id });
+        let alertDrillDownLink = undefined;
+        if (options.link) {
+          alertDrillDownLink = Mustache.render(options.link, { alert_id: alert_id });
+        }
 
         itemList.push(
           <li className="alert-rule-item">
