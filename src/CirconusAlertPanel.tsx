@@ -136,6 +136,31 @@ export const CirconusAlertPanel: React.FC<Props> = ({ options, data, width, heig
     }
   }
 
+  function getSeverityStyle(severity: number) {
+    let color = '#6818B1';
+    let fontColor = 'white';
+    switch (severity) {
+      case 1:
+        color = '#C13737';
+        break;
+      case 2:
+        color = '#F9851B';
+        fontColor = 'black';
+        break;
+      case 3:
+        color = '#FCDC01';
+        fontColor = 'black';
+        break;
+      case 4:
+        color = '#2374D9';
+        break;
+    }
+    return {
+      backgroundColor: color,
+      color: fontColor,
+    };
+  }
+
   const heartSVG = (
     <div className="css-1vzus6i-Icon">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" className="alert-state-ok">
@@ -170,6 +195,7 @@ export const CirconusAlertPanel: React.FC<Props> = ({ options, data, width, heig
 
         const state = getField(dataframe, 'state');
         const notes = getField(dataframe, 'notes');
+        const severity = getField(dataframe, 'severity');
         const metric_name = getField(dataframe, 'metric_name');
         const tags = getField(dataframe, 'tags');
         const cleared_timestamp = getField(dataframe, 'cleared_timestamp');
@@ -254,6 +280,9 @@ export const CirconusAlertPanel: React.FC<Props> = ({ options, data, width, heig
 
                 <div className="alert-rule-item__text">
                   <span className={'alert-state-' + iconState}>{state}</span>
+                  <span id="severity" className="label-tag label" style={getSeverityStyle(severity)}>
+                    P{severity}
+                  </span>
                   <span className="alert-rule-item__time">{humanReadableTime}</span>
                 </div>
               </div>
