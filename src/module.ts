@@ -10,6 +10,24 @@ export const plugin = new PanelPlugin<CirconusAlertPanelOptions>(CirconusAlertPa
       description: 'Drilldown URL for each alert listed you can use {{alert_id}} to insert the alert id into the link',
       defaultValue: '',
     })
+    .addSelect({
+      path: 'sort',
+      name: 'Sort',
+      description: 'Sort order to use for the panel',
+      defaultValue: 'alert_time',
+      settings: {
+        options: [
+          { value: 'alert_time', label: 'Alert Timestamp' },
+          { value: 'priority', label: 'Alert Priority' },
+        ],
+      },
+    })
+    .addBooleanSwitch({
+      path: 'hide_tags',
+      name: 'Hide all tags',
+      description: 'Exclude all tags from the output',
+      defaultValue: false,
+    })
     .addStringArray({
       path: 'exclude',
       name: 'Exclude tag categories',

@@ -187,13 +187,59 @@ export const CirconusAlertPanel: React.FC<Props> = ({ options, data, width, heig
     </div>
   );
 
+  const ackSVG = (
+    <div className="css-1vzus6i-Icon">
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        width="24"
+        height="24"
+        viewBox="0 0 24 24"
+        className="alert-state-acknowledged"
+      >
+        <g id="surface1">
+          <path d="M 6.996094 2.25 C 4.378906 2.25 2.25 4.378906 2.25 6.996094 C 2.25 9.609375 4.378906 11.738281 6.996094 11.738281 C 9.609375 11.738281 11.738281 9.609375 11.738281 6.996094 C 11.738281 4.378906 9.609375 2.25 6.996094 2.25 Z M 9.773438 7.371094 L 6.996094 7.371094 C 6.789062 7.371094 6.621094 7.203125 6.621094 6.996094 L 6.621094 3.070312 L 7.371094 3.070312 L 7.371094 6.621094 L 9.773438 6.621094 Z M 9.773438 7.371094 " />
+          <path d="M 23.738281 19.261719 C 21.917969 16.886719 20.914062 13.558594 20.914062 10.566406 L 20.914062 7.960938 C 20.914062 4.542969 18.316406 1.742188 14.996094 1.582031 C 14.25 1.550781 13.503906 1.652344 12.796875 1.882812 C 14 3.246094 14.738281 5.035156 14.738281 6.996094 C 14.738281 10.980469 11.710938 14.269531 7.835938 14.691406 C 7.355469 16.199219 6.617188 18.007812 5.65625 19.261719 C 5.363281 19.640625 5.3125 20.140625 5.523438 20.566406 C 5.726562 20.984375 6.144531 21.242188 6.613281 21.242188 L 11.589844 21.242188 C 11.773438 22.796875 13.09375 24 14.695312 24 C 16.300781 24 17.621094 22.796875 17.804688 21.242188 L 22.78125 21.242188 C 23.246094 21.242188 23.667969 20.984375 23.871094 20.566406 C 24.082031 20.140625 24.03125 19.640625 23.738281 19.261719 Z M 21.207031 19.570312 C 19.542969 16.984375 18.664062 13.628906 18.664062 10.566406 L 18.664062 7.960938 C 18.664062 5.78125 16.972656 3.929688 14.890625 3.832031 C 14.832031 3.828125 14.769531 3.828125 14.707031 3.828125 L 14.707031 3.078125 C 14.777344 3.078125 14.851562 3.078125 14.925781 3.082031 C 17.402344 3.199219 19.414062 5.386719 19.414062 7.960938 L 19.414062 10.566406 C 19.414062 13.484375 20.253906 16.699219 21.839844 19.164062 Z M 21.207031 19.570312 " />
+          <path d="M 6.996094 0 C 3.136719 0 0 3.136719 0 6.996094 C 0 10.851562 3.136719 13.988281 6.996094 13.988281 C 10.851562 13.988281 13.988281 10.851562 13.988281 6.996094 C 13.988281 3.136719 10.851562 0 6.996094 0 Z M 6.996094 12.488281 C 3.964844 12.488281 1.5 10.023438 1.5 6.996094 C 1.5 3.964844 3.964844 1.5 6.996094 1.5 C 10.023438 1.5 12.488281 3.964844 12.488281 6.996094 C 12.488281 10.023438 10.023438 12.488281 6.996094 12.488281 Z M 6.996094 12.488281 " />
+        </g>
+      </svg>
+    </div>
+  );
+  function prioritySort(dataFrameA: any, dataFrameB: any) {
+    const severityA = getField(dataFrameA, 'severity');
+    const severityB = getField(dataFrameB, 'severity');
+    if (severityA === severityB) {
+      return 0;
+    }
+    if (severityA < severityB) {
+      return -1;
+    }
+    return 1;
+  }
+
+  function timeSort(dataFrameA: any, dataFrameB: any) {
+    const A = getField(dataFrameA, 'alert_timestamp');
+    const B = getField(dataFrameB, 'alert_timestamp');
+    if (A === B) {
+      return 0;
+    }
+    if (A < B) {
+      return 1;
+    }
+    return -1;
+  }
+
   function createItemList() {
     let itemList = [];
     if (data !== undefined && data.series.length > 0) {
+      if (options.sort === 'priority') {
+        data.series.sort(prioritySort);
+      } else {
+        data.series.sort(timeSort);
+      }
       for (let i = 0; i < data.series.length; i++) {
         const dataframe = data.series[i];
 
-        const state = getField(dataframe, 'state');
+        let state = getField(dataframe, 'state');
         const notes = getField(dataframe, 'notes');
         const severity = getField(dataframe, 'severity');
         const metric_name = getField(dataframe, 'metric_name');
@@ -201,11 +247,15 @@ export const CirconusAlertPanel: React.FC<Props> = ({ options, data, width, heig
         const cleared_timestamp = getField(dataframe, 'cleared_timestamp');
         const time = getField(dataframe, 'Time');
         const alert_id = getField(dataframe, 'alert_id');
+        const ack = getField(dataframe, 'acknowledgement');
 
-        // TODO treat absent as warning?
-        const iconState = state === 'ALERTING' ? 'alerting' : 'ok';
-        const iconSVG = iconState === 'alerting' ? heartBreakSVG : heartSVG;
-        //const iconName = iconState === 'alerting' ? 'heart-break' : 'heart';
+        let iconState = state === 'ALERTING' ? 'alerting' : 'ok';
+        let iconSVG = iconState === 'alerting' ? heartBreakSVG : heartSVG;
+        if (ack) {
+          iconState = 'acknowledged';
+          iconSVG = ackSVG;
+          state = 'ACKNOWLEDGED';
+        }
 
         let alertName = '';
         if (notes && notes !== '') {
@@ -250,11 +300,13 @@ export const CirconusAlertPanel: React.FC<Props> = ({ options, data, width, heig
           const style = {
             backgroundColor: colors.color,
           };
-          tagList.push(
-            <div className="label-tag label" style={style}>
-              {alert_view_tags[t]}
-            </div>
-          );
+          if (!options.hide_tags) {
+            tagList.push(
+              <div className="label-tag label" style={style}>
+                {alert_view_tags[t]}
+              </div>
+            );
+          }
         }
 
         if (alertName) {
@@ -275,7 +327,7 @@ export const CirconusAlertPanel: React.FC<Props> = ({ options, data, width, heig
                   <a href={alertDrillDownLink} target="_blank">
                     {alertName}
                   </a>{' '}
-                  | {tagList}
+                  {options.hide_tags ? ' ' : '|'} {tagList}
                 </span>
 
                 <div className="alert-rule-item__text">
