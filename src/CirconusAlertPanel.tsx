@@ -324,9 +324,7 @@ export const CirconusAlertPanel: React.FC<Props> = ({ options, data, width, heig
             <div className="alert-rule-item__body">
               <div className="alert-rule-item__header">
                 <span className="alert-rule-item__name">
-                  <a href={alertDrillDownLink} target="_blank">
-                    {alertName}
-                  </a>{' '}
+                  <a href={alertDrillDownLink} target="_blank" dangerouslySetInnerHTML={{ __html: alertName }}></a>{' '}
                   {options.hide_tags ? ' ' : '|'} {tagList}
                 </span>
 
